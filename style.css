@@ -1,0 +1,237 @@
+@-webkit-keyframes tileGrowVisited {  
+    0% {border-radius: 20px;}
+    25% {border-radius: 12px;}
+    50% {border-radius: 4px;}
+    75% {border-radius: 0px;}
+    100% {border-radius: 4px;}
+    50% {background-color: #0DE485;}
+    100% {background-color: rgba(45, 173, 173, 1);}
+}
+
+@-webkit-keyframes tileGrowRoute {  
+    0% {border-radius: 20px;}
+    25% {border-radius: 12px;}
+    50% {border-radius: 4px;}
+    75% {border-radius: 0px;}
+    100% {border-radius: 4px;}
+    50% {background-color: #c4e40d;}
+    100% {background-color: rgba(208, 224, 57, 1);}
+}
+
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: #24252A;
+}
+
+li, a, .visualize {
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0f1;
+    text-decoration: none;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 10%;
+}
+
+.header ul {
+    list-style: none;
+}
+
+.header ul li {
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.header ul li a {
+    transition: all 0.3s ease 0s;
+}
+
+.header ul li, a:hover {
+    color: #0088a9;
+}
+.sub-menu-1{
+    display: none;
+}
+.header ul li:hover .sub-menu-1{
+    display: block;
+    position: absolute;
+    border-radius: 0px 0px 4px 4px;
+}
+.header ul li:hover .sub-menu-1 ul{
+    display: block;
+    margin: 5px;
+}
+.header ul li:hover .sub-menu-1 ul li{
+    display: block;
+    padding: 10px;
+    text-align: left;
+    justify-content: center;
+}   
+.visualize {
+    padding: 9px 25px;
+    background-color: rgba(0, 126, 169, 1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.visualize:hover {
+    background-color: rgba(0, 126, 169, 0.8);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(50, 27px);
+    grid-template-rows: repeat(20, 27px);
+    justify-content: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.tile-unvisited {
+    border: none;
+    border-radius: 4px;
+    background-color: rgba(154, 204, 231, 1);
+    width: 26px;
+    height: 26px;
+}
+
+.tile-unvisited:hover {
+    background-color: rgba(154, 204, 231, 0.9);
+}
+
+.tile-start {
+    border: none;
+    border-radius: 4px;
+    background-color: rgba(154, 231, 208, 1);
+    width: 26px;
+    height: 26px;
+}
+
+.tile-start:hover {
+    background-color: rgba(154, 231, 208, 0.9);
+}
+
+.tile-end {
+    border: none;
+    border-radius: 4px;
+    background-color: rgb(231, 154, 171, 1);
+    width: 26px;
+    height: 26px;
+}
+
+.tile-end:hover {
+    background-color: rgb(231, 154, 171, 0.9);
+}
+
+.tile-visited {
+    border: none;
+    border-radius: 2px;
+    background-color: rgba(45, 173, 173, 1);
+    width: 26px;
+    height: 26px;
+    -webkit-animation-name: tileGrowVisited;
+    -webkit-animation-duration: 1s;
+}
+
+.tile-visited:hover {
+    background-color: rgba(45, 173, 173, 0.9);
+}
+
+.tile-wall {
+    border: none;
+    border-radius: 2px;
+    background-color: rgba(34, 46, 110, 1);
+    width: 26px;
+    height: 26px;
+}
+
+.tile-wall:hover {
+    background-color: rgba(34, 46, 110, 0.9);
+}
+
+.tile-route {
+    border: none;
+    border-radius: 4px;
+    background-color: rgba(208, 224, 57, 1);
+    width: 26px;
+    height: 26px;
+    -webkit-animation-name: tileGrowRoute;
+    -webkit-animation-duration: 1s;
+}
+
+.tile-route:hover {
+    background-color: rgba(208, 224, 57, 0.9);
+}
+
+.tile-weight {
+    border: none;
+    border-radius: 2px;
+    background-color: rgba(133, 43, 168, 1);
+    width: 26px;
+    height: 26px;
+}
+
+.tile-weight:hover {
+    background-color: rgba(133, 43, 168, 0.9);
+}
+
+.tutorial-container {
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    transition: 0.2s;
+}
+
+.tutorial {
+    background-color: #24252A;
+    width: 600px;
+    max-width: 100%;
+    padding: 30px 50px;
+    border-radius: 40px;
+    color: #fff;
+}
+.tutorial h1 {
+    padding-bottom: 10px;
+}
+.tutorial p {
+    padding-bottom: 20px;
+    opacity: 0.8;
+}
+.tutorial button {
+    background-color: rgba(0, 126, 169, 1);
+    color: #fff;
+    font-size: 14px;
+    padding: 9px 25px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.tutorial button:hover {
+    background-color: rgba(0, 126, 169, 0.8);
+}
+
+#bezaras {
+    float: right;
+}
+
+#error {
+    display: flex;
+    display: none;
+}
