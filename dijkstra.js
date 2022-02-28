@@ -1,5 +1,0 @@
-let dijkstraOrder = [];
-
-function dijkstra(){
-    
-}
