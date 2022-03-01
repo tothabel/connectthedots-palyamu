@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
+    <div class="header"> 
             <ul>
+                <li><img src="logo.png"></li>
+            </ul>           
+            <ul>             
                 <li><a href="#">Algoritmusok</a>
                     <div class="sub-menu-1">
                         <ul>
@@ -22,19 +25,15 @@
                 <li><a href="#" id="currentAlgorithm">Jelenlegi algoritmus</a></li>
                 <li><a href="#" id="random">Random labirintus</a></li>
                 <li><a href="#" id="clearBoard">Tábla törlése</a></li>
-                <li><a href="#">Leírás</a></li>
             </ul>
         <a href="#"><button class="visualize" id="visualize">Visualize</button></a>
     </div>
     <div class="tutorial-container" id="tutorial_container">
         <div class="tutorial" id="tutorial">
             <h1>Tutorial</h1>
-            <p>Start mező áthelyezése: S + Balklikk<br>Cél mező áthelyezése: E + Balklikk<br>Fal elhelyezése: Balklikk<br>Súly elhelyezése: W + Balklikk<br>Törlés: D + Balklikk<br><br>Valami hiba bekövetkezésekor a <b>Tábla törlése</b> gomb megnyomásával lehet visszaállítani mindent. Tesztelési idő hiányában felmerülhet még egy-két hiba. </p> 
+            <p><b>Start</b> mező áthelyezése: <b>S + Balklikk</b><br><b>Cél</b> mező áthelyezése: <b>E + Balklikk</b><br><b>Fal</b> elhelyezése: <b>Balklikk</b><br><b>Súly</b> elhelyezése: <b>W + Balklikk</b> (csak a <b>Dijkstra</b> algoritmusnál!)<br><b>Törlés</b>: <b>D + Balklikk</b><br><br>Bármilyen gond bekövetkezésekor a <b>Tábla törlése</b> gomb megnyomásával lehet visszaállítani mindent. Tesztelési idő hiányában felmerülhet még egy-két hiba. </p> 
             <button id="bezaras">Bezárás</button>    
-    <div class="tutorial-container" id="error">
-        <div class="tutorial" id="tutorial">
-            <p>Nincs kiválasztva algoritmus!</p> 
-            <button id="bezaras">Bezárás</button> 
+
     <script src="tutorial.js"></script>
     <script src="algorithms/bfs.js"></script>
     <script src="algorithms/dfs.js"></script>
