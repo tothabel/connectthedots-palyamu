@@ -57,7 +57,10 @@ for (let i = 1; i <= nodeNum; i++){
 }
 
 //wheights
-let weights = [];
+let weights = new Array(nodeNum);
+for (let i = 0; i < nodeNum; i++){
+    weights[i] = new Array(nodeNum);
+}
 const weightAmount = 5;
 
 //event listeners
@@ -107,21 +110,21 @@ document.getElementById("random").addEventListener('click', randomMaze);
 //FUNCTIONS
 
 function handleTilePressed(i) {
-    console.log(document.getElementById("tile-" + i).className);
+    let tile = document.getElementById("tile-" + i).className;
     //place start node
-    if (SisDown && Endid != i){
+    if (SisDown && Endid != i && tile != "tile-wall" && tile != "tile-weight"){
         document.getElementById("tile-" + Startid).className = "tile-unvisited";
         Startid = i;
         document.getElementById("tile-" + i).className = "tile-start";
     }
     //place end node
-    if (EisDown && Startid != i){
+    if (EisDown && Startid != i && tile != "tile-wall" && tile != "tile-weight"){
         document.getElementById("tile-" + Endid).className = "tile-unvisited";
         Endid = i;
         document.getElementById("tile-" + i).className = "tile-end";
     }
     //create weight
-    if (!EisDown && !SisDown && !DisDown && WisDown && Endid != i && Startid != i && document.getElementById("tile-" + i).className == "tile-unvisited"){
+    if (!EisDown && !SisDown && !DisDown && WisDown && dijkstraBool && Endid != i && Startid != i && document.getElementById("tile-" + i).className == "tile-unvisited"){
         document.getElementById("tile-" + i).className = "tile-weight";
     }
     //create wall
@@ -236,7 +239,7 @@ function visualize(){
                 else {
                     drawRoute();
                 }
-            }, 50)
+            }, 60)
         }
 
         function drawRoute(){
@@ -287,15 +290,60 @@ function visualize(){
     }
 
     if (dijkstraBool){
-        weights = [];
-        for (let i = 1; i <= nodeNum; i++){
-            if (document.getElementById("tile-" + i).className == "tile-weight")
-                weights.push(i);
+        weights = new Array(nodeNum);
+        for (let i = 0; i < nodeNum; i++){
+            weights[i] = new Array(nodeNum);
         }
-        console.log(weights);
+        for (let i = 0; i < nodeNum; i++){
+            for (let j = 0; j < nodeNum; j++){
+                weights[i][j] = 0;
+            }
+        }
+
+        for (let i = 1; i <= nodeNum; i++){ //fill weights array with values
+            for (let v of graph[i]){
+                if (document.getElementById("tile-" + v).className == "tile-weight" || document.getElementById("tile-" + i).className == "tile-weight"){
+                    weights[i-1][v-1] = weightAmount;
+                    weights[v-1][i-1] = weightAmount;
+                }
+                else if (document.getElementById("tile-" + v).className != "tile-weight" && document.getElementById("tile-" + i).className != "tile-weight"){
+                    weights[i-1][v-1] = 1;
+                    weights[v-1][i-1] = 1;
+                }
+            }
+        }
+
+        dijkstra();
+
+        //change unvisited nodes to visited gradually
+        dijkstraLoop(); 
+        var i = 1;
+        function dijkstraLoop() {
+            setTimeout(function() {
+                
+                const tile = document.getElementById("tile-" + (dijkstraOrder[i]+1));
+                if (tile.className == "tile-unvisited")
+                    tile.className = "tile-visited";
+                else if (tile.className == "tile-weight")
+                    tile.className = "tile-visitedWeight";
+                
+                if (dijkstraOrder[i+1] != Endid-1) {
+                    dijkstraLoop();     
+                    i++;        
+                }
+                else {
+                    //draw route
+                    let currentNode = dijkstraParent[Endid];
+                    while (currentNode != Startid){
+                        document.getElementById("tile-" + currentNode).className = "tile-route";
+                        currentNode = dijkstraParent[currentNode];
+                    }
+                }
+            }, 25)
+        }
     }
 
-    if (!dfsBool && !bfsBool && !dijkstraBool){
+    if (!dfsBool && !bfsBool && !dijkstraBool){ //error(no algorithm selected)
         alert("Nincs kiválasztva algoritmus!")
     }
 
