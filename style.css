@@ -8,6 +8,16 @@
     100% {background-color: rgba(45, 173, 173, 1);}
 }
 
+@-webkit-keyframes tileGrowVisitedWeight {  
+    0% {border-radius: 20px;}
+    25% {border-radius: 12px;}
+    50% {border-radius: 4px;}
+    75% {border-radius: 0px;}
+    100% {border-radius: 4px;}
+    50% {background-color: rgba(133, 43, 168, 1);}
+    100% {background-color: rgba(211, 49, 149, 1);}
+}
+
 @-webkit-keyframes tileGrowRoute {  
     0% {border-radius: 20px;}
     25% {border-radius: 12px;}
@@ -48,13 +58,12 @@ li, a, .visualize {
     display: inline-block;
     padding: 0px 20px;
 }
-
 .header ul li a {
     transition: all 0.3s ease 0s;
 }
 
 .header ul li, a:hover {
-    color: #0088a9;
+    color: rgba(0, 126, 169, 1);
 }
 .sub-menu-1{
     display: none;
@@ -74,6 +83,13 @@ li, a, .visualize {
     text-align: left;
     justify-content: center;
 }   
+.header ul li img {
+    width: 100px;
+    margin-left: -80px;
+    padding: 0;
+    background: radial-gradient(rgb(44, 162, 201), rgba(0, 126, 169, 1)) ;
+    border-radius: 30px;
+}
 .visualize {
     padding: 9px 25px;
     background-color: rgba(0, 126, 169, 1);
@@ -92,7 +108,7 @@ li, a, .visualize {
     grid-template-columns: repeat(50, 27px);
     grid-template-rows: repeat(20, 27px);
     justify-content: center;
-    margin-top: 1em;
+    margin-top: none;
     margin-bottom: 1em;
 }
 
@@ -184,6 +200,20 @@ li, a, .visualize {
     background-color: rgba(133, 43, 168, 0.9);
 }
 
+.tile-visitedWeight {
+    border: none;
+    border-radius: 2px;
+    background-color: rgba(211, 49, 149, 1);
+    width: 26px;
+    height: 26px;
+    -webkit-animation-name: tileGrowVisitedWeight;
+    -webkit-animation-duration: 1s;
+}
+
+.tile-visitedWeight:hover {
+    background-color: rgba(211, 49,149, 0.9);
+}
+
 .tutorial-container {
     background-color: rgba(0, 0, 0, 0.3);
     display: flex;
@@ -232,6 +262,5 @@ li, a, .visualize {
 }
 
 #error {
-    display: flex;
     display: none;
 }
