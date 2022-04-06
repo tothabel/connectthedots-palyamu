@@ -48,7 +48,7 @@ function dijkstra(){
 				dist[u] + weights[u][v] < dist[v])
             {
 				dist[v] = dist[u] + weights[u][v];
-				dijkstraParent[v] = u;
+				dijkstraParent[v+1] = u+1;
 			}
 		}
 
