@@ -106,9 +106,10 @@ document.getElementById("clearBoard").addEventListener('click', clearBoard);
 
 document.getElementById("random").addEventListener('click', randomMaze);
 
+document.getElementById("visualize").onclick = function(){visualize()};
+
 
 //FUNCTIONS
-
 function handleTilePressed(i) {
     let tile = document.getElementById("tile-" + i).className;
     //place start node
@@ -186,165 +187,222 @@ function clearBoard(){
    
 
 //VISUALIZE
-document.getElementById("visualize").onclick = function(){visualize()};
-
 function visualize(){
-    console.log("visualize");
-
-    //get wall tiles' id
-    let walls = [];
-    for (let i = 1; i <= nodeNum; i++){
-        if (document.getElementById("tile-" + i).className == "tile-wall")
-            walls.push(i);
-    }
-
-    //remove walled connections from graph
-    for (const w of walls){ //w = one of the wall id's
-        for (let i = 1; i <= nodeNum; i++){
-            if (w == i) //if i is a wall remove all its connections
-                graph[i] = new Array;
-            const wallConnection = graph[i].indexOf(w); //get the wall connections of node i
-            if (wallConnection != -1) //if it has a wall connection remove it
-                graph[i].splice(wallConnection, 1);
-        }
-    }
-
-    if (bfsBool){
-        //bfsDepth
-        let depth = [];
-        depth = bfsDepth();
-
-        //bfsParent
-        let parent = []; //i is the child of parent[i]
-        parent = bfsParent();
-
-        //change unvisited nodes to visited gradually
-        myLoop(); 
-        var i = 1;
-        function myLoop() {
-            setTimeout(function() {
-                
-                let nextVisiteds = [];
-                    for (let j = 1; j <= nodeNum; j++){
-                        if (depth[j] == i)
-                            nextVisiteds.push(j);
-                    }
-                    for (let j = 0; j < nextVisiteds.length; j++){
-                        document.getElementById("tile-" + (nextVisiteds[j])).className = "tile-visited";
-                    }
-                i++;
-                if (i < depth[Endid]) {
-                myLoop();             
-                }
-                else {
-                    drawRoute();
-                }
-            }, 60)
-        }
-
-        function drawRoute(){
-            //when finished draw the route
-            let route = [];
-            let currentNode = parent[Endid];
-            while (currentNode != Startid){
-                route.push(currentNode);
-                document.getElementById("tile-" + currentNode).className = "tile-route";
-                currentNode = parent[currentNode];
-            }
-            
-        }
-    }
-
-    if (dfsBool){
-        resetDfs();
-        dfs(Startid);
-        //console.log(dfsOrder);
-
-        //change unvisited nodes to visited gradually
-        dfsLoop(); 
-        var i = 1;
-        function dfsLoop() {
-            setTimeout(function() {
-                
-                document.getElementById("tile-" + dfsOrder[i]).className = "tile-visited";
-                
-                i++;
-                if (dfsOrder[i] != Endid) {
-                dfsLoop();             
-                }
-                else {
-                    //draw route
-                    drawDfsRoute();
-                }
-            }, 25)
-        }
-
-        function drawDfsRoute(){
-            let currentNode = dfsParent[Endid];
-            while (currentNode != Startid){
-                document.getElementById("tile-" + currentNode).className = "tile-route";
-                currentNode = dfsParent[currentNode];
-            }
-        }
-
-    }
-
-    if (dijkstraBool){
-        weights = new Array(nodeNum);
-        for (let i = 0; i < nodeNum; i++){
-            weights[i] = new Array(nodeNum);
-        }
-        for (let i = 0; i < nodeNum; i++){
-            for (let j = 0; j < nodeNum; j++){
-                weights[i][j] = 0;
-            }
-        }
-
-        for (let i = 1; i <= nodeNum; i++){ //fill weights array with values
-            for (let v of graph[i]){
-                if (document.getElementById("tile-" + v).className == "tile-weight" || document.getElementById("tile-" + i).className == "tile-weight"){
-                    weights[i-1][v-1] = weightAmount;
-                    weights[v-1][i-1] = weightAmount;
-                }
-                else if (document.getElementById("tile-" + v).className != "tile-weight" && document.getElementById("tile-" + i).className != "tile-weight"){
-                    weights[i-1][v-1] = 1;
-                    weights[v-1][i-1] = 1;
-                }
-            }
-        }
-
-        dijkstra();
-
-        //change unvisited nodes to visited gradually
-        dijkstraLoop(); 
-        var i = 1;
-        function dijkstraLoop() {
-            setTimeout(function() {
-                
-                const tile = document.getElementById("tile-" + (dijkstraOrder[i]+1));
-                if (tile.className == "tile-unvisited")
-                    tile.className = "tile-visited";
-                else if (tile.className == "tile-weight")
-                    tile.className = "tile-visitedWeight";
-                
-                if (dijkstraOrder[i+1] != Endid-1) {
-                    dijkstraLoop();     
-                    i++;        
-                }
-                else {
-                    //draw route
-                    let currentNode = dijkstraParent[Endid];
-                    while (currentNode != Startid){
-                        document.getElementById("tile-" + currentNode).className = "tile-route";
-                        currentNode = dijkstraParent[currentNode];
-                    }
-                }
-            }, 25)
-        }
-    }
-
+    //error
     if (!dfsBool && !bfsBool && !dijkstraBool){ //error(no algorithm selected)
-        alert("Nincs kiválasztva algoritmus!")
+        alert("Nincs kiválasztva algoritmus!");
     }
+    else {
+        //REMOVE EVENT LISTENERS
 
+        //dont be able to press tiles
+        for (let i = 1; i <= nodeNum; i++){
+            const tile = document.getElementById("tile-" + i);
+            tile.onmousemove = function(){}
+        }
+
+        document.getElementById("dfs").removeEventListener('click', dfsClicked);
+        document.getElementById("bfs").removeEventListener('click', bfsClicked);
+        document.getElementById("dijkstra").removeEventListener('click', dijkstraClicked);
+        document.getElementById("clearBoard").removeEventListener('click', clearBoard);
+        document.getElementById("random").removeEventListener('click', randomMaze);
+        document.getElementById("visualize").onclick = function(){};
+
+        //--------------------------------------------------------------
+        //get wall tiles' id
+        let walls = [];
+        for (let i = 1; i <= nodeNum; i++){
+            if (document.getElementById("tile-" + i).className == "tile-wall")
+                walls.push(i);
+        }
+
+        //remove walled connections from graph
+        for (const w of walls){ //w = one of the wall id's
+            for (let i = 1; i <= nodeNum; i++){
+                if (w == i) //if i is a wall remove all its connections
+                    graph[i] = new Array;
+                const wallConnection = graph[i].indexOf(w); //get the wall connections of node i
+                if (wallConnection != -1) //if it has a wall connection remove it
+                    graph[i].splice(wallConnection, 1);
+            }
+        }
+
+        if (bfsBool){
+            //bfsDepth
+            let depth = [];
+            depth = bfsDepth();
+
+            //bfsParent
+            let parent = []; //i is the child of parent[i]
+            parent = bfsParent();
+
+            //change unvisited nodes to visited gradually
+            myLoop(); 
+            var i = 1;
+            function myLoop() {
+                setTimeout(function() {
+                    
+                    let nextVisiteds = [];
+                        for (let j = 1; j <= nodeNum; j++){
+                            if (depth[j] == i)
+                                nextVisiteds.push(j);
+                        }
+                        for (let j = 0; j < nextVisiteds.length; j++){
+                            document.getElementById("tile-" + (nextVisiteds[j])).className = "tile-visited";
+                        }
+                    i++;
+                    if (i < depth[Endid]) {
+                    myLoop();             
+                    }
+                    else {
+                        drawRoute();
+                    }
+                }, 50)
+            }
+
+            function drawRoute(){
+                //when finished draw the route
+                let route = [];
+                let currentNode = parent[Endid];
+                while (currentNode != Startid){
+                    route.push(currentNode);
+                    document.getElementById("tile-" + currentNode).className = "tile-route";
+                    currentNode = parent[currentNode];
+                }
+                //ADD BACK EVENT LISTENERS
+                document.getElementById("dfs").addEventListener('click', dfsClicked);
+                document.getElementById("bfs").addEventListener('click', bfsClicked);
+                document.getElementById("dijkstra").addEventListener('click', dijkstraClicked);
+                document.getElementById("clearBoard").addEventListener('click', clearBoard);
+                document.getElementById("random").addEventListener('click', randomMaze);
+                document.getElementById("visualize").onclick = function(){visualize()};
+
+                for (let i = 1; i <= nodeNum; i++){
+                    const tile = document.getElementById("tile-" + i);
+                    tile.onmousemove = function() { 
+                        if(isMouseDown)
+                        handleTilePressed(i) 
+                    }
+                }
+            }
+        }
+
+        if (dfsBool){
+            resetDfs();
+            dfs(Startid);
+            //console.log(dfsOrder);
+
+            //change unvisited nodes to visited gradually
+            dfsLoop(); 
+            var i = 1;
+            function dfsLoop() {
+                setTimeout(function() {
+                    
+                    document.getElementById("tile-" + dfsOrder[i]).className = "tile-visited";
+                    
+                    i++;
+                    if (dfsOrder[i] != Endid) {
+                    dfsLoop();             
+                    }
+                    else {
+                        //draw route
+                        drawDfsRoute();
+                    }
+                }, 25)
+            }
+
+            function drawDfsRoute(){
+                let currentNode = dfsParent[Endid];
+                while (currentNode != Startid){
+                    document.getElementById("tile-" + currentNode).className = "tile-route";
+                    currentNode = dfsParent[currentNode];
+                }
+                //ADD BACK EVENT LISTENERS
+                document.getElementById("dfs").addEventListener('click', dfsClicked);
+                document.getElementById("bfs").addEventListener('click', bfsClicked);
+                document.getElementById("dijkstra").addEventListener('click', dijkstraClicked);
+                document.getElementById("clearBoard").addEventListener('click', clearBoard);
+                document.getElementById("random").addEventListener('click', randomMaze);
+                document.getElementById("visualize").onclick = function(){visualize()};
+
+                for (let i = 1; i <= nodeNum; i++){
+                    const tile = document.getElementById("tile-" + i);
+                    tile.onmousemove = function() { 
+                        if(isMouseDown)
+                        handleTilePressed(i) 
+                    }
+                }
+            }
+
+        }
+
+        if (dijkstraBool){
+            weights = new Array(nodeNum);
+            for (let i = 0; i < nodeNum; i++){
+                weights[i] = new Array(nodeNum);
+            }
+            for (let i = 0; i < nodeNum; i++){
+                for (let j = 0; j < nodeNum; j++){
+                    weights[i][j] = 0;
+                }
+            }
+
+            for (let i = 1; i <= nodeNum; i++){ //fill weights array with values
+                for (let v of graph[i]){
+                    if (document.getElementById("tile-" + v).className == "tile-weight" || document.getElementById("tile-" + i).className == "tile-weight"){
+                        weights[i-1][v-1] = weightAmount;
+                        weights[v-1][i-1] = weightAmount;
+                    }
+                    else if (document.getElementById("tile-" + v).className != "tile-weight" && document.getElementById("tile-" + i).className != "tile-weight"){
+                        weights[i-1][v-1] = 1;
+                        weights[v-1][i-1] = 1;
+                    }
+                }
+            }
+
+            dijkstra();
+
+            //change unvisited nodes to visited gradually
+            dijkstraLoop(); 
+            var i = 1;
+            function dijkstraLoop() {
+                setTimeout(function() {
+                    
+                    const tile = document.getElementById("tile-" + (dijkstraOrder[i]+1));
+                    if (tile.className == "tile-unvisited")
+                        tile.className = "tile-visited";
+                    else if (tile.className == "tile-weight")
+                        tile.className = "tile-visitedWeight";
+                    
+                    if (dijkstraOrder[i+1] != Endid-1) {
+                        dijkstraLoop();     
+                        i++;        
+                    }
+                    else {
+                        //draw route
+                        let currentNode = dijkstraParent[Endid];
+                        while (currentNode != Startid){
+                            document.getElementById("tile-" + currentNode).className = "tile-route";
+                            currentNode = dijkstraParent[currentNode];
+                        }
+                        //ADD BACK EVENT LISTENERS
+                        document.getElementById("dfs").addEventListener('click', dfsClicked);
+                        document.getElementById("bfs").addEventListener('click', bfsClicked);
+                        document.getElementById("dijkstra").addEventListener('click', dijkstraClicked);
+                        document.getElementById("clearBoard").addEventListener('click', clearBoard);
+                        document.getElementById("random").addEventListener('click', randomMaze);
+                        document.getElementById("visualize").onclick = function(){visualize()};
+
+                        for (let i = 1; i <= nodeNum; i++){
+                            const tile = document.getElementById("tile-" + i);
+                            tile.onmousemove = function() { 
+                                if(isMouseDown)
+                                handleTilePressed(i) 
+                            }
+                        }
+                    }
+                }, 10)
+            }
+        }
+    }
 }
